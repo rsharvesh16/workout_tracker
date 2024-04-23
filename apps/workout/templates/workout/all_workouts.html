@@ -99,6 +99,7 @@
                                         <th scope="col">Date:</th>
                                         <th scope="col">Workout:</th>
                                         <th scope="col">Actions:</th>
+                                        <th scope="col">Download Image</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -111,6 +112,15 @@
                                                 <button class="btn btn-link btn-sm view-link" type="submit"><i
                                                         class="fa fa-eye"></i> View</button>
                                             </form>
+                                        </td>
+                                        <td>
+                                            {% if workout.image %}
+                    <!-- Download Image Button -->
+                    <a href="{{ workout.image.url }}" download="workout_image_{{ workout.id }}.jpg" class="btn btn-sm btn-primary"><i class="fa fa-download"></i> Download</a>
+                                            {% else %}
+                                                <!-- No Image Available Message -->
+                                                <span>No Image Available</span>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                     {% endfor %}

@@ -1,4 +1,4 @@
-bcrypt==3.1.4
+bcrypt
 cffi
 Django==1.11.17
 pycparser==2.18

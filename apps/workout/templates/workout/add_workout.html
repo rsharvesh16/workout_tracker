@@ -89,7 +89,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form id="workout-form" action="/workout" method="POST">
+                            <form id="workout-form" action="/workout" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <!-- Workout Errors -->
                                 {% if messages %} {% for message in messages %} {% if message.tags == "workout error" %}
@@ -107,6 +107,11 @@
                                 <div class="form-group">
                                     <input id="description" type="text" name="description"
                                         class="input-material form-control-lg" placeholder="Description">
+                                </div>
+
+                                <div>
+                                    <label for="image">Image:</label>
+                                    <input type="file" id="image" name="image">
                                 </div>
                                 <!-- Add Workout Button -->
                                 <input id="add" type="submit" value="Add" class="btn btn-primary btn-lg">

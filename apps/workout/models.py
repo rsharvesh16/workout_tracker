@@ -3,6 +3,7 @@ import re # regex for email validation
 import bcrypt # bcrypt for password encryption/decryption
 from decimal import * # for decimal number purposes
 
+
 class UserManager(models.Manager):
     """Additional instance method functions for `User`"""
 
@@ -420,12 +421,11 @@ class User(models.Model):
     objects = UserManager() # Adds additional instance methods to `User`
 
 class Workout(models.Model):
-    """Creates instances of `Workout`."""
-
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=150)
     completed = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    image = models.ImageField(upload_to='workout_images/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = WorkoutManager()

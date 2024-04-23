@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages # access django's `messages` module.
 from .models import User, Workout, Exercise
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from .forms import WorkoutForm
 
 def login(request):
     """If GET, load login page, if POST, login user."""
@@ -97,51 +100,29 @@ def dashboard(request):
         return redirect("/")
 
 def new_workout(request):
-    """If GET, load new workout; if POST, submit new workout."""
-
     try:
-        # Check for valid session:
         user = User.objects.get(id=request.session["user_id"])
-
-        # Gather any page data:
-        data = {
-            'user': user,
-        }
+        data = {'user': user}
 
         if request.method == "GET":
-            # If get request, load `add workout` page with data:
+            form = WorkoutForm()  # Create a new instance of the form
+            data['form'] = form
             return render(request, "workout/add_workout.html", data)
 
         if request.method == "POST":
-            # Unpack request.POST for validation as we must add a field and cannot modify the request.POST object itself as it's a tuple:
-            workout = {
-                "name": request.POST["name"],
-                "description": request.POST["description"],
-                "user": user
-            }
-
-            # Begin validation of a new workout:
-            validated = Workout.objects.new(**workout)
-
-            # If errors, reload register page with errors:
-            try:
-                if len(validated["errors"]) > 0:
-                    print("Workout could not be created.")
-                    # Loop through errors and Generate Django Message for each with custom level and tag:
-                    for error in validated["errors"]:
-                        messages.error(request, error, extra_tags='workout')
-                    # Reload workout page:
-                    return redirect("/workout")
-            except KeyError:
-                # If validation successful, load newly created workout page:
-                print("Workout passed validation and has been created.")
-
-                id = str(validated['workout'].id)
-                # Load workout:
-                return redirect('/workout/' + id)
+            form = WorkoutForm(request.POST, request.FILES)  # Include request.FILES for image uploads
+            if form.is_valid():
+                workout = form.save(commit=False)
+                workout.user = user
+                workout.save()
+                messages.success(request, "Workout created successfully!")
+                return redirect('/workout/' + str(workout.id))
+            else:
+                messages.error(request, "Failed to create workout. Please check the form.")
+                data['form'] = form
+                return render(request, "workout/add_workout.html", data)
 
     except (KeyError, User.DoesNotExist) as err:
-        # If existing session not found:
         messages.info(request, "You must be logged in to view this page.", extra_tags="invalid_session")
         return redirect("/")
 

@@ -25,7 +25,7 @@ SECRET_KEY = '5gg&=_#^wgi(e5j!yasyva&x+s-x9^jtboecfv0%8tyf@pg)!+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.4', 'localhost']
+ALLOWED_HOSTS = ['192.168.1.4', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -119,3 +119,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+WORKOUT_UPLOAD_PATH = 'workout_images/'
